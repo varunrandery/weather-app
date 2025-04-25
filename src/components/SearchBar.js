@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 48,
     borderWidth: 0,
-    paddingHorizontal: 10,
+    paddingHorizontal: 8,
     paddingRight: 50,
     fontSize: 16,
     backgroundColor: 'transparent',

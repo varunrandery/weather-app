@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, SafeAreaView, Alert } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, SafeAreaView, Alert, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { clearRecentLocations } from '../services/storageUtils';
 
@@ -32,13 +32,12 @@ const SettingsScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container}>      
       <View style={styles.scrollContent}>
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Settings</Text>
           <Text style={styles.headerSubtitle}>Customize your weather experience</Text>
         </View>
-        
         
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
@@ -110,47 +109,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginLeft: 8,
     color: '#333',
-  },
-  optionContainer: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  option: {
-    padding: 18,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  selectedOption: {
-    backgroundColor: '#0070f3',
-  },
-  optionContent: {
-    flex: 1,
-  },
-  optionText: {
-    fontFamily: 'Geist_600SemiBold',
-    fontSize: 16,
-    color: '#333',
-    marginBottom: 4,
-  },
-  optionSubtext: {
-    fontFamily: 'Geist_400Regular',
-    fontSize: 14,
-    color: '#666',
-  },
-  selectedOptionText: {
-    color: '#fff',
-  },
-  selectedOptionSubtext: {
-    color: '#e6f0ff',
   },
   infoCard: {
     backgroundColor: '#fff',

@@ -1,21 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, SafeAreaView, ScrollView } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, StyleSheet, Text, SafeAreaView, ScrollView, Keyboard, KeyboardAvoidingView, Platform } from 'react-native';
 import SearchBar from '../components/SearchBar';
 import RecentlyViewed from '../components/RecentlyViewed';
-import { useNavigation } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { getRecentLocations, addRecentLocation } from '../services/storageUtils';
 
 const PlacesScreen = () => {
   const navigation = useNavigation();
   const [isSearching, setIsSearching] = useState(false);
   const [recentLocations, setRecentLocations] = useState([]);
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
 
   // Load recent locations on component mount and listen for clear event
   useEffect(() => {
     loadRecentLocations();
     
-    // Set up listener for when recent locations are cleared from Settings
+    // Always set up listener for when recent locations are cleared from Settings
+    // This ensures the callback is always pointing to the current instance
     global.recentLocationsClearedCallback = () => {
       setRecentLocations([]);
     };
@@ -25,10 +26,41 @@ const PlacesScreen = () => {
       global.recentLocationsClearedCallback = null;
     };
   }, []);
+  
+  // Reload recent locations when screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      loadRecentLocations();
+      return () => {};
+    }, [])
+  );
+  
+  // Set up keyboard listeners
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true);
+      }
+    );
+    
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false);
+      }
+    );
+
+    // Clean up listeners on unmount
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   const loadRecentLocations = async () => {
     const locations = await getRecentLocations();
-    setRecentLocations(locations);
+    setRecentLocations(locations || []);
   };
 
   const handleSelectLocation = async (lat, lon, locationData) => {
@@ -42,7 +74,6 @@ const PlacesScreen = () => {
     // IMPORTANT: First call the callback BEFORE navigation
     // This ensures the data is updated before the screen changes
     if (global.locationSelectedCallback) {
-      // Pass the full location object to ensure units don't reset
       await global.locationSelectedCallback(lat, lon, locationData);
     }
     
@@ -51,41 +82,39 @@ const PlacesScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.scrollContent}>
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>Places</Text>
-          <Text style={styles.headerSubtitle}>Find weather for any city</Text>
-        </View>
-        
-        <View style={styles.searchSection}>
-          <SearchBar 
-            onSelectLocation={(lat, lon, locationData) => handleSelectLocation(lat, lon, locationData)}
-            onSearchStart={() => setIsSearching(true)} 
-          />
-        </View>
-        
-        {/* Show empty state only if no recent locations and not searching */}
-        {recentLocations.length === 0 && !isSearching && (
-          <View style={styles.emptyStateContainer}>
-            <View style={styles.illustrationContainer}>
-              <Ionicons name="search" size={60} color="#ccd9ff" />
-            </View>
-            <Text style={styles.emptyStateText}>Search for a city to get weather information</Text>
+    <KeyboardAvoidingView 
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{flex: 1}}
+    >
+      <SafeAreaView style={styles.container}>
+        <View style={styles.scrollContent}>
+          <View style={styles.header}>
+            <Text style={styles.headerTitle}>Places</Text>
+            <Text style={styles.headerSubtitle}>Find weather for any city</Text>
           </View>
-        )}
-        
-        {/* Fixed Recently Viewed component at bottom of screen */}
-        {recentLocations.length > 0 && (
-          <View style={styles.recentlyViewedContainer}>
-            <RecentlyViewed 
-              locations={recentLocations} 
-              onSelectLocation={(lat, lon, locationData) => handleSelectLocation(lat, lon, locationData)} 
+          
+          <View style={styles.searchSection}>
+            <SearchBar 
+              onSelectLocation={(lat, lon, locationData) => handleSelectLocation(lat, lon, locationData)}
+              onSearchStart={() => setIsSearching(true)} 
             />
           </View>
-        )}
-      </View>
-    </SafeAreaView>
+          
+          {/* Recently Viewed component - positioned based on keyboard visibility */}
+          {recentLocations.length > 0 && (
+            <View style={[
+              styles.recentlyViewedContainer, 
+              keyboardVisible && styles.recentlyViewedContainerKeyboardOpen
+            ]}>
+              <RecentlyViewed 
+                locations={recentLocations} 
+                onSelectLocation={(lat, lon, locationData) => handleSelectLocation(lat, lon, locationData)} 
+              />
+            </View>
+          )}
+        </View>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -101,7 +130,7 @@ const styles = StyleSheet.create({
   },
   searchSection: {
     marginHorizontal: 0,
-    zIndex: 10, // Ensure it sits above RecentlyViewed
+    zIndex: 10,
     position: 'relative',
   },
   recentlyViewedContainer: {
@@ -110,7 +139,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     paddingHorizontal: 0,
-    zIndex: 5, // Lower zIndex to allow search results to overlap
+    zIndex: 5,
   },
   header: {
     marginBottom: 20,
@@ -125,29 +154,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Geist_400Regular',
     fontSize: 16,
     color: '#666',
-  },
-  emptyStateContainer: {
-    height: 200, // Reduced height to make room for Recently Viewed at bottom
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 40,
-    marginTop: 30,
-  },
-  illustrationContainer: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: '#e7f0ff',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-  emptyStateText: {
-    fontFamily: 'Geist_400Regular',
-    fontSize: 16,
-    textAlign: 'center',
-    color: '#666',
-    lineHeight: 24,
   },
 });
 

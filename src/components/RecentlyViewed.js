@@ -26,6 +26,7 @@ const RecentlyViewed = ({ locations = [], onSelectLocation }) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Recently Viewed</Text>
+        <Text style={styles.counter}>{locations.length}</Text>
       </View>
       <FlatList
         data={locations}
@@ -55,14 +56,29 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   title: {
     fontFamily: 'Geist_600SemiBold',
     fontSize: 16,
     color: '#333',
   },
+  counter: {
+    fontFamily: 'Geist_500Medium',
+    fontSize: 16,
+    color: '#666',
+    backgroundColor: '#f0f5ff',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    marginTop: -2,
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
   list: {
     borderRadius: 16,
+    maxHeight: 130,
   },
   locationItem: {
     flexDirection: 'row',

@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { OPENWEATHER_API_KEY } from '@env';
 
 const BASE_URL = 'https://api.openweathermap.org/data/2.5';
 const GEO_URL = 'https://api.openweathermap.org/geo/1.0';
@@ -11,7 +10,7 @@ export const getWeatherByCoords = async (lat, lon) => {
       params: {
         lat,
         lon,
-        appid: OPENWEATHER_API_KEY,
+        appid: process.env.OPENWEATHER_API_KEY,
         units: 'metric',
       },
     });
@@ -28,7 +27,7 @@ export const searchCities = async (query) => {
       params: {
         q: query,
         limit: 5,
-        appid: OPENWEATHER_API_KEY,
+        appid: process.env.OPENWEATHER_API_KEY,
       },
     });
     return response.data;
@@ -44,7 +43,7 @@ export const getForecastByCoords = async (lat, lon) => {
       params: {
         lat,
         lon,
-        appid: OPENWEATHER_API_KEY,
+        appid: process.env.OPENWEATHER_API_KEY,
         units: 'metric',
         cnt: 24, // Get 24 data points (3 days with 8 points per day)
       },

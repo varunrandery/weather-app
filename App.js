@@ -11,8 +11,6 @@ import HomeScreen from './src/screens/HomeScreen';
 import PlacesScreen from './src/screens/PlacesScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 
-// No longer using UnitProvider since we're standardizing on metric units
-
 // Create the tab navigator
 const Tab = createBottomTabNavigator();
 

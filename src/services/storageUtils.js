@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // Storage keys
 const RECENT_LOCATIONS_KEY = 'recentLocations';
 const CURRENT_LOCATION_KEY = 'currentLocation';
-const MAX_RECENT_LOCATIONS = 5;
+const MAX_RECENT_LOCATIONS = 10;
 
 /**
  * Add a location to the recently viewed list
