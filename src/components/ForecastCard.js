@@ -29,7 +29,7 @@ const ForecastCard = ({ forecast }) => {
                 style={styles.icon} 
               />
             </View>
-            <Text style={styles.tempText}>{day.avgTemp}°C</Text>
+            <Text style={styles.tempText}>{day.lowTemp}°⁄ {day.highTemp}°</Text>
             <Text style={styles.descriptionText}>{day.description}</Text>
           </View>
         ))}
@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 24,
     padding: 24,
+    paddingHorizontal: 14,
     marginHorizontal: 20,
     marginBottom: 20,
     shadowColor: '#000',
@@ -58,20 +59,20 @@ const styles = StyleSheet.create({
   dayContainer: {
     flex: 1,
     alignItems: 'center',
-    paddingHorizontal: 8,
+    paddingHorizontal: 10,
   },
   dayDivider: {
-    borderRightWidth: 1,
+    borderRightWidth: 2,
     borderRightColor: '#eee',
   },
   dayText: {
-    fontFamily: 'Geist_600SemiBold',
-    fontSize: 16,
+    fontFamily: 'Geist_400Regular',
+    fontSize: 14,
     color: '#333',
     marginBottom: 8,
   },
   iconContainer: {
-    marginVertical: 4,
+    marginBottom: 4,
   },
   icon: {
     width: 50,
@@ -79,13 +80,13 @@ const styles = StyleSheet.create({
   },
   tempText: {
     fontFamily: 'Geist_600SemiBold',
-    fontSize: 22,
+    fontSize: 20,
     color: '#333',
     marginVertical: 4,
   },
   descriptionText: {
     fontFamily: 'Geist_400Regular',
-    fontSize: 12,
+    fontSize: 14,
     color: '#555',
     textTransform: 'capitalize',
     textAlign: 'center',

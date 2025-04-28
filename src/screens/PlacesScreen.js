@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, StyleSheet, Text, SafeAreaView, ScrollView, Keyboard, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, StyleSheet, Text, SafeAreaView, Keyboard, KeyboardAvoidingView, Platform } from 'react-native';
 import SearchBar from '../components/SearchBar';
 import RecentlyViewed from '../components/RecentlyViewed';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Geist_600SemiBold',
     fontSize: 32,
     color: '#333',
-    marginBottom: 8,
+    marginBottom: 4,
   },
   headerSubtitle: {
     fontFamily: 'Geist_400Regular',

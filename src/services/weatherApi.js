@@ -26,7 +26,7 @@ export const searchCities = async (query) => {
     const response = await axios.get(`${GEO_URL}/direct`, {
       params: {
         q: query,
-        limit: 5,
+        limit: 3,
         appid: process.env.OPENWEATHER_API_KEY,
       },
     });
@@ -81,10 +81,11 @@ const processDailyForecasts = (forecastData) => {
     dailyData[day].descriptions.push(item.weather[0].description);
   });
   
-  // Calculate average temp and most frequent icon/description for each day
+  // Calculate high/low temps and most frequent icon/description for each day
   const result = Object.values(dailyData).map(day => {
-    // Calculate average temperature
-    const avgTemp = day.temps.reduce((sum, temp) => sum + temp, 0) / day.temps.length;
+    // Find high and low temperatures
+    const highTemp = Math.max(...day.temps);
+    const lowTemp = Math.min(...day.temps);
     
     // Find most common icon
     const iconCounts = {};
@@ -104,7 +105,8 @@ const processDailyForecasts = (forecastData) => {
     
     return {
       date: day.date,
-      avgTemp: Math.round(avgTemp),
+      highTemp: Math.round(highTemp),
+      lowTemp: Math.round(lowTemp),
       icon: mostCommonIcon,
       description: mostCommonDescription,
     };

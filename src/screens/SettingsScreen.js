@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, SafeAreaView, Alert, ScrollView } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, SafeAreaView, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { clearRecentLocations } from '../services/storageUtils';
 
@@ -56,7 +56,7 @@ const SettingsScreen = () => {
         
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Ionicons name="information-circle-outline" size={22} color="#0070f3" />
+            <Ionicons name="information-outline" size={22} color="#0070f3" />
             <Text style={styles.sectionTitle}>About</Text>
           </View>
           
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Geist_600SemiBold',
     fontSize: 32,
     color: '#333',
-    marginBottom: 8,
+    marginBottom: 4,
   },
   headerSubtitle: {
     fontFamily: 'Geist_400Regular',

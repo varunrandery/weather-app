@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 
 const WeatherCard = ({ weather }) => {
   if (!weather) return null;
@@ -23,20 +23,30 @@ const WeatherCard = ({ weather }) => {
           {weather.weather[0].description}
         </Text>
       </View>
-      <View style={styles.details}>
-        <View style={styles.detailItem}>
-          <Text style={styles.detailTitle}>Humidity</Text>
-          <Text style={styles.detailValue}>{weather.main.humidity}%</Text>
+      <ScrollView 
+        horizontal={true} 
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.detailsContainer}
+      >
+        <View style={styles.details}>
+          <View style={styles.detailItem}>
+            <Text style={styles.detailTitle}>High-Low </Text>
+            <Text style={styles.detailValue}>{Math.round(weather.main.temp_max)}°⁄ {Math.round(weather.main.temp_min)}°</Text>
+          </View>
+          <View style={styles.detailItem}>
+            <Text style={styles.detailTitle}>Humidity</Text>
+            <Text style={styles.detailValue}>{weather.main.humidity}%</Text>
+          </View>
+          <View style={styles.detailItem}>
+            <Text style={styles.detailTitle}>Wind</Text>
+            <Text style={styles.detailValue}>{windSpeed} kph</Text>
+          </View>
+          <View style={styles.detailItem}>
+            <Text style={styles.detailTitle}>Feels Like</Text>
+            <Text style={styles.detailValue}>{Math.round(weather.main.feels_like)}°</Text>
+          </View>
         </View>
-        <View style={styles.detailItem}>
-          <Text style={styles.detailTitle}>Wind</Text>
-          <Text style={styles.detailValue}>{windSpeed} km/h</Text>
-        </View>
-        <View style={styles.detailItem}>
-          <Text style={styles.detailTitle}>Feels Like</Text>
-          <Text style={styles.detailValue}>{Math.round(weather.main.feels_like)}°C</Text>
-        </View>
-      </View>
+      </ScrollView>
     </View>
   );
 };
@@ -58,21 +68,21 @@ const styles = StyleSheet.create({
     fontFamily: 'Geist_600SemiBold',
     fontSize: 28,
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 10,
     color: '#333',
   },
   mainInfo: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: 5,
+    marginVertical: 0,
   },
   conditionContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: -10,
-    marginBottom: 10,
+    marginBottom: 0,
   },
   icon: {
     width: 50,
@@ -94,17 +104,22 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: -4,
   },
+  detailsContainer: {
+    marginLeft: 0,
+  },
   details: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     marginTop: 20,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#FEF9F4',
     borderRadius: 16,
     padding: 16,
+    paddingLeft: 18,
+    paddingRight: 16,
   },
   detailItem: {
     alignItems: 'center',
-    flex: 1,
+    width: 85,
+    margin: -1,
   },
   detailTitle: {
     fontFamily: 'Geist_400Regular',
@@ -114,7 +129,7 @@ const styles = StyleSheet.create({
   },
   detailValue: {
     fontFamily: 'Geist_600SemiBold',
-    fontSize: 18,
+    fontSize: 20,
     color: '#333',
   },
 });
